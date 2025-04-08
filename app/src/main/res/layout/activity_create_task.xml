@@ -177,17 +177,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline27" />
 
-    <AutoCompleteTextView
-        android:id="@+id/selectunit2"
-        android:layout_width="217dp"
-        android:layout_height="32dp"
-        android:background="#F8FFFFFF"
-        android:text="Select Unit"
-        android:textColor="#090909"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.412"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
