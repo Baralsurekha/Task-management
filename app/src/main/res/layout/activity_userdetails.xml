@@ -7,198 +7,186 @@
     android:background="#000000">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="24dp">
 
         <!-- Network Status -->
-        <TextView
-            android:id="@+id/networkStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="5G"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Back Button -->
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/baseline_arrow_back_24"
-        android:contentDescription="Back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
         <!-- Profile Image -->
         <ImageView
             android:id="@+id/profileImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginTop="16dp"
+            android:contentDescription="Profile Photo"
             android:src="@drawable/user"
-        android:contentDescription="Profile Photo"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- User Name -->
         <TextView
             android:id="@+id/tvUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="John Smith"
+            android:layout_marginTop="8dp"
+            android:text="Joseph Wright"
             android:textColor="#FFFFFF"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/profileImage"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileImage" />
 
         <TextView
             android:id="@+id/tvEditProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="Edit Your Profile"
             android:textColor="#FFD700"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/tvUserName"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvUserName" />
 
 
         <TextView
-            android:id="@+id/labelEmail"
+            android:id="@+id/labelfirstname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email"
+            android:layout_marginTop="24dp"
+            android:text="First Name"
             android:textColor="#FFFFFF"
-            android:textStyle="bold"
             android:textSize="22sp"
-            app:layout_constraintTop_toBottomOf="@id/tvEditProfile"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="24dp" />
+            app:layout_constraintTop_toBottomOf="@id/tvEditProfile" />
 
         <TextView
-            android:id="@+id/tvEmail"
+            android:id="@+id/tvfirstname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Cihe232@cihe.com"
+            android:layout_marginStart="16dp"
+            android:text="Joseph"
             android:textColor="#FFFFFF"
             android:textSize="22sp"
-            app:layout_constraintTop_toTopOf="@id/labelEmail"
-            app:layout_constraintStart_toEndOf="@id/labelEmail"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="16dp" />
+            app:layout_constraintStart_toEndOf="@id/labelfirstname"
+            app:layout_constraintTop_toTopOf="@id/labelfirstname" />
 
         <!-- Address -->
         <TextView
-            android:id="@+id/labelAddress"
+            android:id="@+id/labellastname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address"
+            android:layout_marginTop="16dp"
+            android:text="Last Name"
             android:textColor="#FFFFFF"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:textSize="22sp"
-            app:layout_constraintTop_toBottomOf="@id/labelEmail"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:id="@+id/tvAddress"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="North Sydney 123"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            app:layout_constraintTop_toTopOf="@id/labelAddress"
-            app:layout_constraintStart_toEndOf="@id/labelAddress"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="16dp" />
+            app:layout_constraintTop_toBottomOf="@id/labelfirstname" />
 
         <!-- First Name -->
         <TextView
-            android:id="@+id/labelFirstName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="First Name"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            app:layout_constraintTop_toBottomOf="@id/labelAddress"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:id="@+id/tvFirstName"
+            android:id="@+id/tvlastname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="John"
+            android:layout_marginStart="16dp"
+            android:text="Wright"
             android:textColor="#FFFFFF"
             android:textSize="22sp"
-            app:layout_constraintTop_toTopOf="@id/labelFirstName"
-            app:layout_constraintStart_toEndOf="@id/labelFirstName"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="16dp" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/labellastname"
+            app:layout_constraintTop_toTopOf="@id/labellastname" />
+
+        <TextView
+            android:id="@+id/labeladdress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Address"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labellastname" />
 
         <!-- Last Name -->
         <TextView
-            android:id="@+id/labelLastName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Last Name"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            app:layout_constraintTop_toBottomOf="@id/labelFirstName"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="16dp" />
-
-        <TextView
-            android:id="@+id/tvLastName"
+            android:id="@+id/tvaddress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Smith"
+            android:layout_marginStart="16dp"
+            android:text="Gunghalin; ACT"
             android:textColor="#FFFFFF"
             android:textSize="22sp"
-            app:layout_constraintTop_toTopOf="@id/labelLastName"
-            app:layout_constraintStart_toEndOf="@id/labelLastName"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="16dp" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/labeladdress"
+            app:layout_constraintTop_toTopOf="@id/labeladdress" />
+
+        <TextView
+            android:id="@+id/labelemail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Email"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labeladdress" />
 
         <!-- Button -->
+
+
+        <TextView
+            android:id="@+id/tvemail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Cihe23@student.com"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/labelemail"
+            app:layout_constraintTop_toTopOf="@id/labelemail" />
+
         <Button
             android:id="@+id/btnUpdateDetails"
-            android:layout_width="282dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="32dp"
+            android:layout_width="248dp"
+            android:layout_height="61dp"
+            android:layout_marginTop="64dp"
             android:backgroundTint="#32CD32"
             android:padding="14dp"
             android:text="Change Password"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="23sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.339"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/labelLastName" />
-
+            app:layout_constraintTop_toBottomOf="@id/labelemail" />
 
         <Button
             android:id="@+id/logout"
-            android:layout_width="176dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="36dp"
+            android:layout_width="156dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="44dp"
             android:padding="14dp"
             android:text="Log Out"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.506"
+            app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnUpdateDetails" />
 
