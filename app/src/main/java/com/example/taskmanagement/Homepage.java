@@ -3,6 +3,7 @@ package com.example.taskmanagement;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -34,6 +35,26 @@ public class Homepage extends AppCompatActivity {
             return insets;
         });
 
+        FloatingActionButton addTaskFloatingButton = findViewById(R.id.floatingAction);
+        ImageView userDetails = findViewById(R.id.homeUser);
+
+        addTaskFloatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the Registration Activity
+                Intent intent = new Intent(Homepage.this, CreateTask.class);
+                startActivity(intent);
+            }
+        });
+
+        userDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the Registration Activity
+                Intent intent = new Intent(Homepage.this, Userdetails.class);
+                startActivity(intent);
+            }
+        });
 
         setUptaskModels();
 
@@ -50,9 +71,9 @@ public class Homepage extends AppCompatActivity {
         long deadlineMillis = calendar.getTimeInMillis();
 
         taskModels.add(new taskModel(" Report", "Make a team and complete the PDF report", "In Progress", deadlineMillis));
+        taskModels.add(new taskModel(" Report", "Make a team and complete the PDF report", "In Progress", deadlineMillis));
 
     }
-
 
 
 }

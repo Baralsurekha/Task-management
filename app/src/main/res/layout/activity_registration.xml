@@ -13,49 +13,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="339dp" />
+        app:layout_constraintGuide_percent="0.46374828" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="387dp" />
+        app:layout_constraintGuide_percent="0.5294118" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="428dp" />
+        app:layout_constraintGuide_percent="0.58686733" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="468dp" />
+        app:layout_constraintGuide_percent="0.64158684" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="509dp" />
+        app:layout_constraintGuide_percent="0.6976744" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="549dp" />
+        app:layout_constraintGuide_percent="0.75239396" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="592dp" />
+        app:layout_constraintGuide_percent="0.81395346" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -94,14 +94,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="472dp" />
+        app:layout_constraintGuide_percent="0.35430917" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="20dp" />
+        app:layout_constraintGuide_percent="0.02872777" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
@@ -140,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="661dp" />
+        app:layout_constraintGuide_percent="0.9056088" />
 
     <TextView
         android:id="@+id/textView8"
@@ -253,9 +253,10 @@
         android:id="@+id/pword"
         android:layout_width="191dp"
         android:layout_height="32dp"
-        android:ems="10"
-        android:inputType="textPassword"
         android:background="@color/cardview_light_background"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -265,9 +266,10 @@
         android:id="@+id/cpword"
         android:layout_width="191dp"
         android:layout_height="32dp"
-        android:ems="10"
-        android:inputType="textPassword"
         android:background="@color/cardview_light_background"
+        android:ems="10"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -279,6 +281,7 @@
         android:layout_height="32dp"
         android:background="@color/cardview_light_background"
         android:ems="10"
+        android:hint="Email"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@+id/guideline16"
         app:layout_constraintEnd_toEndOf="parent"
@@ -289,9 +292,10 @@
         android:id="@+id/lastname"
         android:layout_width="191dp"
         android:layout_height="32dp"
-        android:ems="10"
-        android:inputType="text"
         android:background="@color/cardview_light_background"
+        android:ems="10"
+        android:hint="Last Name"
+        android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/guideline17"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline4"
@@ -301,9 +305,10 @@
         android:id="@+id/firstname"
         android:layout_width="191dp"
         android:layout_height="32dp"
-        android:ems="10"
-        android:inputType="text"
         android:background="@color/cardview_light_background"
+        android:ems="10"
+        android:hint="First Name"
+        android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/guideline18"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline4"

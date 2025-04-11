@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         // Find the TextView by ID
         TextView signUpTextView = findViewById(R.id.signinpage);
         Button button = findViewById(R.id.login);
-        EditText Usename = findViewById(R.id.username);
+        EditText Username = findViewById(R.id.username);
         EditText Password = findViewById(R.id.password);
         // Set click listener
         signUpTextView.setOnClickListener(new View.OnClickListener() {
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                manager.login(Usename.getText().toString(),Password.getText().toString());
+                manager.login(Username.getText().toString(),Password.getText().toString());
 
             }
         });
