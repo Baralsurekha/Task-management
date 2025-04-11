@@ -26,6 +26,7 @@ public class Registration extends AppCompatActivity {
         });
 
         TextView loginTextView = findViewById(R.id.loginpage);
+        TextView accountTextView = findViewById(R.id.textView13);
 
         loginTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,6 +36,18 @@ public class Registration extends AppCompatActivity {
                 finish();
 
             }
+
+        });
+
+        accountTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Registration.this, Homepage.class);
+                startActivity(intent);
+                finish();
+
+            }
+
         });
     }
 }
