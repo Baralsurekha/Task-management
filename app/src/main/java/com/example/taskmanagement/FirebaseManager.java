@@ -4,10 +4,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseManager {
-    public void FirebaseManager(){
+    public static FirebaseManager instance;
+   private FirebaseDatabase database;
+    public  FirebaseManager() {
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("message");
-
-myRef.setValue("Hello, World!");}
+        database  = FirebaseDatabase.getInstance();
+        instance = this ;
+    }
+    public void login (String username,String password){
+    if(password ==    database.getReference("Users").child(username).toString()){
+//       TODo Login sucess
+    }
+    }
 }
