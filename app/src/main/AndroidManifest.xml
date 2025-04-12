@@ -37,8 +37,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Editprofile" />
-
+        <activity
+            android:name=".Editprofile"
+            android:exported="false"/>
+        <activity
+            android:name=".changePassword"
+            android:exported="false"/>
 
     </application>
 
