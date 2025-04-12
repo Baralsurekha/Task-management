@@ -95,7 +95,8 @@
         android:textColor="#090909"
         android:textColorHint="#595757"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextText3"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editTextTime"
