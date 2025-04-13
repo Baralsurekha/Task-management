@@ -51,7 +51,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="152dp"
             android:text="Edit Your Profile"
-            android:textColor="@color/white"
+            android:textColor="#FFD700"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.537"

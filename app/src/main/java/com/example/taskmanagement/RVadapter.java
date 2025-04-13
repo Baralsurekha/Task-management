@@ -53,7 +53,7 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.TaskViewHolder> {
         // Set calendar to show the deadline date
         holder.calendarView.setDate(task.getDeadlineMillis(), true, true);
 
-        // You can disable interaction with calendar since this is frontend only
+        // Disable interaction with calendar since this is frontend only
         holder.calendarView.setEnabled(false);
     }
 
