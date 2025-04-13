@@ -13,6 +13,9 @@
         android:theme="@style/Theme.TaskManagement"
         tools:targetApi="31">
         <activity
+            android:name=".Notification"
+            android:exported="false" />
+        <activity
             android:name=".Userdetails"
             android:exported="false" />
         <activity
@@ -39,11 +42,10 @@
         </activity>
         <activity
             android:name=".Editprofile"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".changePassword"
-            android:exported="false"/>
-
+            android:exported="false" />
     </application>
 
 </manifest>

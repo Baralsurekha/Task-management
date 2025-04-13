@@ -37,12 +37,21 @@ public class Homepage extends AppCompatActivity {
 
         FloatingActionButton addTaskFloatingButton = findViewById(R.id.floatingAction);
         ImageView userDetails = findViewById(R.id.homeUser);
+        ImageView notifications = findViewById(R.id.homeNotification);
 
         addTaskFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Start the Registration Activity
                 Intent intent = new Intent(Homepage.this, CreateTask.class);
+                startActivity(intent);
+            }
+        });
+
+        notifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Homepage.this, Notification.class);
                 startActivity(intent);
             }
         });
@@ -67,7 +76,7 @@ public class Homepage extends AppCompatActivity {
     private void setUptaskModels() {
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.MARCH, 31); // Note: months are 0-indexed (0 = Jan, 1 = Feb,...)
+        calendar.set(2024, Calendar.MARCH, 31);
         long deadlineMillis = calendar.getTimeInMillis();
 
         taskModels.add(new taskModel(" Report", "Make a team and complete the PDF report", "In Progress", deadlineMillis));

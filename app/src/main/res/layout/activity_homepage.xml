@@ -33,6 +33,7 @@
         android:id="@+id/homeNotification"
         android:layout_width="65dp"
         android:layout_height="50dp"
+        android:clickable="true"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.734"
