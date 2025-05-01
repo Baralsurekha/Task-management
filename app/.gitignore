@@ -1,1 +1,18 @@
-/build
+# Ignore Android build outputs
+/build/
+app/build/
+
+# Ignore Firebase config
+app/google-services.json
+
+# Ignore Gradle and local IDE stuff
+/.gradle/
+/.idea/
+/local.properties
+
+# macOS-specific
+.DS_Store
+
+# VS Code
+.vscode/
+

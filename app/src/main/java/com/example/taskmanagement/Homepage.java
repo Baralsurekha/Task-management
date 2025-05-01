@@ -59,7 +59,6 @@ public class Homepage extends AppCompatActivity {
         userDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Start the Registration Activity
                 Intent intent = new Intent(Homepage.this, Userdetails.class);
                 startActivity(intent);
             }
@@ -80,7 +79,7 @@ public class Homepage extends AppCompatActivity {
         long deadlineMillis = calendar.getTimeInMillis();
 
         taskModels.add(new taskModel(" Report", "Make a team and complete the PDF report", "In Progress", deadlineMillis));
-        taskModels.add(new taskModel(" Report", "Make a team and complete the PDF report", "In Progress", deadlineMillis));
+        taskModels.add(new taskModel(" Report", "Add deadlines", "Completed", deadlineMillis));
 
     }
 
