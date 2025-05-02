@@ -86,8 +86,9 @@ void loginAccountInFirebase(String Email, String Password) {
                     if (user.isEmailVerified()) {
                         // Login successful
                         startActivity(new Intent(MainActivity.this, Homepage.class));
-                        finish(); // optional: closes login screen
-                    } else {
+                        finish();
+                    }
+                    else {
                         // Resend verification email
                         user.sendEmailVerification()
                                 .addOnSuccessListener(aVoid -> {

@@ -66,7 +66,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextname" />
 
     <EditText
-        android:id="@+id/editTextText3"
+        android:id="@+id/editStatus"
         android:layout_width="365sp"
         android:layout_height="70sp"
         android:layout_marginStart="16dp"
@@ -95,7 +95,7 @@
         android:textColor="#090909"
         android:textColorHint="#595757"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3"
+        app:layout_constraintTop_toBottomOf="@+id/editStatus"
         tools:ignore="HardcodedText" />
 
     <EditText
@@ -115,7 +115,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextDate" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/addbutton"
         android:layout_width="239dp"
         android:layout_height="71dp"
         android:backgroundTint="#4CAF50"

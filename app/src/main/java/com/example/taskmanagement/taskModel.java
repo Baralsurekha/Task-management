@@ -6,13 +6,23 @@ public class taskModel {
     private String taskStatus;
     private long deadlineMillis;
 
-    public taskModel(String taskName, String taskDescription, String taskStatus, long deadlineMillis) {
-        this.taskName = taskName;
-        this.taskDescription = taskDescription;
-        this.taskStatus = taskStatus;
-        this.deadlineMillis = deadlineMillis;
+    public taskModel() {
+
     }
 
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+    public void setTaskStatus(String taskStatus) {
+        this.taskStatus = taskStatus;
+    }
+
+    public void setDeadlineMillis(long deadlineMillis) {
+        this.deadlineMillis = deadlineMillis;
+    }
 
     public String getTaskName() {
         return taskName;

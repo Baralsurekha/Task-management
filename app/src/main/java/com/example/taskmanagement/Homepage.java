@@ -78,9 +78,6 @@ public class Homepage extends AppCompatActivity {
         calendar.set(2024, Calendar.MARCH, 31);
         long deadlineMillis = calendar.getTimeInMillis();
 
-        taskModels.add(new taskModel(" Report", "Make a team and complete the PDF report", "In Progress", deadlineMillis));
-        taskModels.add(new taskModel(" Report", "Add deadlines", "Completed", deadlineMillis));
-
     }
 
 
