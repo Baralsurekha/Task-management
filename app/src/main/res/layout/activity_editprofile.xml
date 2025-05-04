@@ -96,6 +96,8 @@
             android:layout_marginTop="12dp"
             android:background="@android:drawable/edit_text"
             android:hint="Enter Email"
+            android:enabled="false"
+            android:focusable="false"
             android:textColor="#FFFFFF"
             app:layout_constraintTop_toBottomOf="@id/emailLabel"
             app:layout_constraintStart_toStartOf="parent"
