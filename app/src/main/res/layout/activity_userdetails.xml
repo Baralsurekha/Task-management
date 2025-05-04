@@ -11,12 +11,6 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-        <!-- Network Status -->
-
-        <!-- Back Button -->
-
-        <!-- Profile Image -->
-
         <!-- User Name -->
         <ImageView
             android:id="@+id/profileImage"
