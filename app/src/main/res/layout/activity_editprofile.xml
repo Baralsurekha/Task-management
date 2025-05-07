@@ -44,11 +44,11 @@
         <EditText
             android:id="@+id/editFirstName"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="8dp"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/background_task"
             android:hint="Enter First Name"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/firstNameLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -68,11 +68,11 @@
         <EditText
             android:id="@+id/editLastName"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="8dp"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/background_task"
             android:hint="Enter Last Name"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/lastNameLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -92,13 +92,13 @@
         <EditText
             android:id="@+id/editEmail"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@android:drawable/edit_text"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/background_task"
             android:hint="Enter Email"
             android:enabled="false"
             android:focusable="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/emailLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -118,11 +118,11 @@
         <EditText
             android:id="@+id/editAddress"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_marginTop="8dp"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/background_task"
             android:hint="Enter Address"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@id/addressLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -130,16 +130,18 @@
         <!-- Save Button -->
         <Button
             android:id="@+id/btnSaveProfile"
-            android:layout_width="229dp"
-            android:layout_height="48dp"
+            android:layout_width="220dp"
+            android:layout_height="55dp"
             android:layout_marginTop="48dp"
             android:backgroundTint="#32CD32"
             android:text="Update Details"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            app:layout_constraintTop_toBottomOf="@id/editAddress"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/editAddress" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
