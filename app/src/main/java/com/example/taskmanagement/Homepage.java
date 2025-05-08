@@ -1,10 +1,16 @@
 package com.example.taskmanagement;
 
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.app.AlarmManager;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,13 +22,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Homepage extends AppCompatActivity {
 
-    ArrayList<taskModel> taskModels = new ArrayList<>();
+    public List<taskModel> taskModels ;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +53,11 @@ public class Homepage extends AppCompatActivity {
             return insets;
         });
 
+
         FloatingActionButton addTaskFloatingButton = findViewById(R.id.floatingAction);
         ImageView userDetails = findViewById(R.id.homeUser);
         ImageView notifications = findViewById(R.id.homeNotification);
+        TextView userName = findViewById(R.id.textView14);
 
         addTaskFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,11 +86,86 @@ public class Homepage extends AppCompatActivity {
 
         setUptaskModels();
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new RVadapter(this, taskModels));
+
+
+
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            String uid = user.getUid();
+            database.child(uid).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().exists()) {
+                        String email = task.getResult().child("email").getValue(String.class);
+                        String Firstname = task.getResult().child("firstname").getValue(String.class);
+                        String Lastname = task.getResult().child("lastname").getValue(String.class);
+
+                        userName.setText(Firstname + Lastname);
+
+                        Toast.makeText(this, "User email: " + email, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Error: " + task.getException(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        GetTaskList();
 
     }
+
+    private void GetTaskList() {
+
+
+            Utility.getCollectionReferenceForTasks()
+
+            .get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    QuerySnapshot snap = task.getResult();
+
+                   taskModels = task.getResult().toObjects(taskModel.class);
+                        if(taskModels!=null){
+                            Log.e("Sucess", "List fetch sucessfully " + taskModels.size());
+                            recyclerView.setAdapter(new RVadapter(this, taskModels));
+                            SetUpAlaram();
+                        }
+                        // Use retrievedTask
+                    } else {
+                        Log.e("Sucess", "document fetch failed");  // Document doesn't exist
+                    }
+
+            });
+        }
+
+    private void SetUpAlaram() {
+        for (taskModel model: taskModels
+             ) {
+
+
+            Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
+            intent.putExtra("taskId", model.getTaskName());
+            intent.putExtra("TaskDesc",model.getTaskDescription());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    this,
+                    model.getTaskName().hashCode(), // unique id
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    model.getDeadlineMillis() -( 60 * 60 * 1000), // Notify 60 minutes before deadline
+                    pendingIntent
+            );
+
+        }
+    }
+
 
     private void setUptaskModels() {
 
@@ -80,5 +175,10 @@ public class Homepage extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GetTaskList();
+    }
 }
+

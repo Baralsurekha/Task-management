@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Registration extends AppCompatActivity {
 
@@ -29,6 +31,7 @@ public class Registration extends AppCompatActivity {
     Button createAccountbtn;
     ProgressBar progressBar;
 
+    DatabaseReference database;
 
 
     @Override
@@ -43,7 +46,7 @@ public class Registration extends AppCompatActivity {
         });
 
         TextView loginTextView = findViewById(R.id.loginpage);
-
+        database = FirebaseDatabase.getInstance().getReference("Users");
         loginTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +107,8 @@ public class Registration extends AppCompatActivity {
 
                             firebaseAuth.getCurrentUser().sendEmailVerification();
                             firebaseAuth.signOut();
+                            User newUser = new User(Email,FirstName,LastName);
+                            database.child(firebaseAuth.getCurrentUser().getUid()).setValue(newUser);
 
                         } else {
                             Utility.showToast(Registration.this,task.getException().getLocalizedMessage());
@@ -159,4 +164,19 @@ return true;
     }
 
 
+    public static class User {
+        public String email;
+        public String firstname;
+        public String lastname;
+
+        public User() {}  // Needed for Firebase
+
+        public User(String email,String firstname, String Lastname) {
+            this.firstname = firstname;
+            this.lastname = Lastname;
+            this.email = email;
+        }
+    }
+
 }
+

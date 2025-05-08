@@ -9,7 +9,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Utility {
-
+    public static boolean isfreshlogin;
     static void showToast(Context context, String message) {
         Toast.makeText(context,message, Toast.LENGTH_SHORT).show();
     }
