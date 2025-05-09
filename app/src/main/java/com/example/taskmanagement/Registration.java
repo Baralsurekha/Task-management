@@ -5,11 +5,14 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.content.Intent;
+import android.os.Debug;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +25,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Registration extends AppCompatActivity {
 
@@ -99,16 +104,48 @@ public class Registration extends AppCompatActivity {
                 new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        changeInProgress(false);
+
 
                         if(task.isSuccessful()){
 
             Utility.showToast(Registration.this,"Account created successfully. Please, verify your email.");
 
                             firebaseAuth.getCurrentUser().sendEmailVerification();
-                            firebaseAuth.signOut();
-                            User newUser = new User(Email,FirstName,LastName);
-                            database.child(firebaseAuth.getCurrentUser().getUid()).setValue(newUser);
+
+                            User newUser = new User(Email,FirstName,LastName,"");
+                           /* database.child(firebaseAuth.getCurrentUser().getUid()).setValue(newUser, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                                    if(error == null){
+                                        changeInProgress(false);
+                                        firebaseAuth.signOut();
+                                        startActivity(new Intent(Registration.this, MainActivity.class));
+                                    }
+                                    else {
+                                        Log.e("Sucess","DBError... "+error);
+                                    }
+                                }
+                            });*/
+                            FirebaseFirestore.getInstance().collection("users")
+                                    .document(firebaseAuth.getCurrentUser().getUid()).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> tasks) {
+
+                                            if(tasks.isSuccessful()) {
+                                                changeInProgress(false);
+                                                firebaseAuth.signOut();
+                                                startActivity(new Intent(Registration.this, MainActivity.class));
+                                                finish();
+
+                                            } else {
+
+                                                Log.e("Sucess","DBError... "+tasks.getException());
+                                            }
+                                        }
+                                    });
+
+
+
 
                         } else {
                             Utility.showToast(Registration.this,task.getException().getLocalizedMessage());
@@ -168,13 +205,15 @@ return true;
         public String email;
         public String firstname;
         public String lastname;
+        public String address;
 
         public User() {}  // Needed for Firebase
 
-        public User(String email,String firstname, String Lastname) {
+        public User(String email,String firstname, String Lastname , String address) {
             this.firstname = firstname;
             this.lastname = Lastname;
             this.email = email;
+            this.address = address;
         }
     }
 
