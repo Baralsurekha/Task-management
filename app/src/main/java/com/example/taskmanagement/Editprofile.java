@@ -87,7 +87,5 @@ public class Editprofile extends AppCompatActivity {
                                 Toast.makeText(this, "Failed to update profile", Toast.LENGTH_SHORT).show());
             }
         });
-
-
     }
 }

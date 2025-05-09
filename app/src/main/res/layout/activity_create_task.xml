@@ -42,7 +42,6 @@
         android:background="@drawable/background_task"
         android:hint="Task Name"
         android:inputType="text"
-        android:paddingLeft="10dp"
         android:textColor="#090909"
         android:textColorHint="#595757"
         app:circularflow_defaultRadius="20dp"
@@ -50,17 +49,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-
     <EditText
         android:id="@+id/editTextdescription"
         android:layout_width="365sp"
         android:layout_height="70sp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/background_task"
         android:backgroundTint="#FBFAE7"
         android:ems="10"
-        android:paddingLeft="10dp"
         android:hint="Task Description"
         android:inputType="text"
         android:textColor="#090909"
@@ -68,57 +65,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextname" />
 
-    <Spinner
-        android:id="@+id/spinner"
+    <EditText
+        android:id="@+id/editStatus"
         android:layout_width="365sp"
         android:layout_height="70sp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/background_task"
         android:backgroundTint="#FBFAE7"
         android:ems="10"
-        android:textSize="18dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:hint="Task Status"
+        android:inputType="text"
+        android:hint="Task status"
         android:textColor="#090909"
         android:textColorHint="#595757"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextdescription" />
 
-    <TextView
+    <EditText
         android:id="@+id/editTextDate"
         android:layout_width="365sp"
         android:layout_height="70sp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/background_task"
         android:backgroundTint="#FBFAE7"
         android:ems="10"
-        android:hint="Deadline Date"
-        android:textSize="18dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
         android:inputType="date"
+        android:hint="Deadline date"
         android:textColor="#090909"
         android:textColorHint="#595757"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="HardcodedText"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/editStatus"
+        tools:ignore="HardcodedText" />
 
-    <TextView
+    <EditText
         android:id="@+id/editTextTime"
         android:layout_width="365sp"
         android:layout_height="70sp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/background_task"
         android:backgroundTint="#FBFAE7"
-        android:textSize="18dp"
+        android:ems="10"
         android:inputType="time"
-        android:gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:hint="Deadline Time"
+        android:hint="Deadline time"
         android:textColor="#090909"
         android:textColorHint="#595757"
         app:layout_constraintStart_toStartOf="parent"
@@ -148,7 +138,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

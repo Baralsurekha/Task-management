@@ -21,15 +21,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     EditText email,password;
     Button loginbtn;
     ProgressBar progressBar;
-
-    DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         TextView signUpTextView = findViewById(R.id.signinpage);
-        database = FirebaseDatabase.getInstance().getReference("Users");
+
         // Set click listener
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,9 +85,7 @@ void loginAccountInFirebase(String Email, String Password) {
                 if (user != null) {
                     if (user.isEmailVerified()) {
                         // Login successful
-
                         startActivity(new Intent(MainActivity.this, Homepage.class));
-                        Utility.isfreshlogin = true;
                         finish();
                     }
                     else {
