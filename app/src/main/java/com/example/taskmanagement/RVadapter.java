@@ -9,18 +9,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
-public class RVadapter extends RecyclerView.Adapter<RVadapter.TaskViewHolder> {
+public class RVadapter extends FirestoreRecyclerAdapter<taskModel, RVadapter.TaskViewHolder> {
 
-    private Context context;
+Context context;
     private List<taskModel> taskList;
 
-    // Constructor
-    public RVadapter(Context context, List<taskModel> taskList) {
+
+    public RVadapter(@NonNull FirestoreRecyclerOptions<taskModel> options, Context context) {
+        super(options);
         this.context = context;
-        this.taskList = taskList;
     }
+
+    // Constructor
 
     @NonNull
     @Override
@@ -30,7 +36,7 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.TaskViewHolder> {
     }
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView textTaskName, textTaskDescription, textTaskStatus;
+        TextView textTaskName, textTaskDescription, textTaskStatus, timestampTextView;
         CalendarView calendarView;
 
         public TaskViewHolder(@NonNull View itemView) {
@@ -39,22 +45,14 @@ public class RVadapter extends RecyclerView.Adapter<RVadapter.TaskViewHolder> {
             textTaskDescription = itemView.findViewById(R.id.textTaskDescription);
             textTaskStatus = itemView.findViewById(R.id.textTaskStatus);
             calendarView = itemView.findViewById(R.id.calendarView);
+            timestampTextView = itemView.findViewById(R.id.timestamp_textView);
         }
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        taskModel task = taskList.get(position);
-
-        holder.textTaskName.setText(task.getTaskName());
-        holder.textTaskDescription.setText(task.getTaskDescription());
-        holder.textTaskStatus.setText("Status: " + task.getTaskStatus());
-
-        // Set calendar to show the deadline date
-        holder.calendarView.setDate(task.getDeadlineMillis(), true, true);
-
-        // Disable interaction with calendar since this is frontend only
-        holder.calendarView.setEnabled(false);
+    protected void onBindViewHolder(@NonNull TaskViewHolder holder, int position, @NonNull taskModel model) {
+        
     }
 
     @Override

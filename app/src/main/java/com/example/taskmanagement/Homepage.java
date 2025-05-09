@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,9 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class Homepage extends AppCompatActivity {
+ FloatingActionButton addTaskbtn;
+ RecyclerView recyclerView;
 
     ArrayList<taskModel> taskModels = new ArrayList<>();
 
@@ -38,6 +38,7 @@ public class Homepage extends AppCompatActivity {
         FloatingActionButton addTaskFloatingButton = findViewById(R.id.floatingAction);
         ImageView userDetails = findViewById(R.id.homeUser);
         ImageView notifications = findViewById(R.id.homeNotification);
+        recyclerView = findViewById(R.id.recycler_view);
 
         addTaskFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,22 +64,13 @@ public class Homepage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        setUptaskModels();
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new RVadapter(this, taskModels));
+        setupRecyclerView();
 
     }
 
-    private void setUptaskModels() {
+void setupRecyclerView(){
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2024, Calendar.MARCH, 31);
-        long deadlineMillis = calendar.getTimeInMillis();
 
-    }
-
+}
 
 }

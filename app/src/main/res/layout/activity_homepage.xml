@@ -67,7 +67,6 @@
         android:id="@+id/name"
         android:layout_width="120dp"
         android:layout_height="41dp"
-        android:text="Name"
         android:textColor="#F8FFFFFF"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -119,7 +118,7 @@
         app:layout_constraintGuide_percent="0.20" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recycler_view"
         android:layout_width="409dp"
         android:layout_height="508dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline24"
