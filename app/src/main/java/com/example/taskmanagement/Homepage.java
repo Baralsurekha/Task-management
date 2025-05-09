@@ -41,10 +41,10 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Homepage extends AppCompatActivity {
- FloatingActionButton addTaskbtn;
- RecyclerView recyclerView;
+    FloatingActionButton addTaskbtn;
+    RecyclerView recyclerView;
 
-    public List<taskModel> taskModels ;
+    public List<taskModel> taskModels;
 
 
     @Override
@@ -91,11 +91,10 @@ public class Homepage extends AppCompatActivity {
         });
         setupRecyclerView();
 
-        setUptaskModels();
+      //  setUptaskModels();
 
-         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users");
@@ -107,11 +106,11 @@ public class Homepage extends AppCompatActivity {
                     .document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
 
-                             Registration.User user=   task.getResult().toObject(Registration.User.class);
-                              if(user!=null)
-                                userName.setText(user.firstname);
+                                Registration.User user = task.getResult().toObject(Registration.User.class);
+                                if (user != null)
+                                    userName.setText(user.firstname);
 
                             }
                         }
@@ -141,16 +140,16 @@ public class Homepage extends AppCompatActivity {
     private void GetTaskList() {
 
 
-            Utility.getCollectionReferenceForTasks()
+        Utility.getCollectionReferenceForTasks()
 
-            .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    QuerySnapshot snap = task.getResult();
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot snap = task.getResult();
 
-                   taskModels = task.getResult().toObjects(taskModel.class);
-                        if(taskModels!=null){
+                        taskModels = task.getResult().toObjects(taskModel.class);
+                        if (taskModels != null) {
                             Log.e("Sucess", "List fetch sucessfully " + taskModels.size());
-                            recyclerView.setAdapter(new RVadapter(this, taskModels));
+                            recyclerView.setAdapter(new RVadapter( this ,taskModels ));
                             SetUpAlaram();
                         }
                         // Use retrievedTask
@@ -158,17 +157,17 @@ public class Homepage extends AppCompatActivity {
                         Log.e("Sucess", "document fetch failed");  // Document doesn't exist
                     }
 
-            });
-        }
+                });
+    }
 
     private void SetUpAlaram() {
-        for (taskModel model: taskModels
-             ) {
+        for (taskModel model : taskModels
+        ) {
 
 
             Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
             intent.putExtra("taskId", model.getTaskName());
-            intent.putExtra("TaskDesc",model.getTaskDescription());
+            intent.putExtra("TaskDesc", model.getTaskDescription());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(
                     this,
                     model.getTaskName().hashCode(), // unique id
@@ -179,7 +178,7 @@ public class Homepage extends AppCompatActivity {
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
-                    model.getDeadlineMillis() -( 60 * 60 * 1000), // Notify 60 minutes before deadline
+                    model.getDeadlineMillis() - (60 * 60 * 1000), // Notify 60 minutes before deadline
                     pendingIntent
             );
 
@@ -187,7 +186,7 @@ public class Homepage extends AppCompatActivity {
     }
 
 
-void setupRecyclerView(){
+    void setupRecyclerView() {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.MARCH, 31);
@@ -200,6 +199,7 @@ void setupRecyclerView(){
         super.onResume();
         GetTaskList();
     }
-}
+
 
 }
+
