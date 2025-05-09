@@ -1,11 +1,20 @@
 package com.example.taskmanagement;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -20,13 +29,17 @@ import com.google.firebase.firestore.DocumentReference;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 public class CreateTask extends AppCompatActivity {
-
-    EditText taskName, taskDescription, taskStatus, deadlineDate, deadlineTime;
+    String TaskStatus ;
+    EditText taskName, taskDescription;
+    TextView deadlineDate, deadlineTime;
+    Spinner taskStatus;
     Button addTaskBtn;
+    Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +53,59 @@ public class CreateTask extends AppCompatActivity {
         });
         taskName = findViewById(R.id.editTextname);
         taskDescription = findViewById(R.id.editTextdescription);
-        taskStatus = findViewById(R.id.editStatus);
+        taskStatus = findViewById(R.id.spinner);
         deadlineDate = findViewById(R.id.editTextDate);
         deadlineTime = findViewById(R.id.editTextTime);
         addTaskBtn = findViewById(R.id.addbutton);
+        String[] options = {"TODO", "Progress", "Failed","Finished"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
 
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        taskStatus.setAdapter(adapter);
+
+// Get selected item
+        taskStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString();
+                TaskStatus = selected;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Optional
+            }
+        });
+
+
+        deadlineDate.setOnClickListener(v -> {
+            new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                deadlineDate.setText(sdf.format(calendar.getTime()));
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+        deadlineTime.setOnClickListener(v -> {
+            new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                calendar.set(Calendar.SECOND, 0);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                deadlineTime.setText(sdf.format(calendar.getTime()));
+            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+        });
 
         addTaskBtn.setOnClickListener(v -> saveNote());
     }
     void saveNote(){
         String TaskName = taskName.getText().toString();
         String TaskDescription = taskDescription.getText().toString();
-        String TaskStatus = taskStatus.getText().toString();
+
         String DeadlineDate =deadlineDate.getText().toString();
         String DeadlineTime = deadlineTime.getText().toString();
 
@@ -70,6 +124,7 @@ public class CreateTask extends AppCompatActivity {
             // in format yyyy-mm-dd
             Date date = sdf.parse(dateTimeString);
             deadlineMillis = date.getTime();
+            Log.e("Sucess ","Deadline time " +deadlineMillis );
         } catch (ParseException e) {
             deadlineDate.setError("Invalid date or time format");
             deadlineDate.requestFocus();
@@ -123,7 +178,6 @@ boolean validateData (String TaskName,String TaskDescription,String TaskStatus,S
     }
 
     if (TaskStatus.isEmpty()) {
-        taskStatus.setError("Task Status is required");
         taskStatus.requestFocus();
         return false;
     }
