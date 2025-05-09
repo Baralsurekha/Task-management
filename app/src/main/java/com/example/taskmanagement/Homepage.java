@@ -13,6 +13,7 @@ import android.widget.Toast;
 import android.app.AlarmManager;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,12 +22,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
@@ -36,9 +41,11 @@ import java.util.Calendar;
 import java.util.List;
 
 public class Homepage extends AppCompatActivity {
-
-    public List<taskModel> taskModels ;
+    FloatingActionButton addTaskbtn;
     RecyclerView recyclerView;
+
+    public List<taskModel> taskModels;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +62,8 @@ public class Homepage extends AppCompatActivity {
         FloatingActionButton addTaskFloatingButton = findViewById(R.id.floatingAction);
         ImageView userDetails = findViewById(R.id.homeUser);
         ImageView notifications = findViewById(R.id.homeNotification);
-        TextView userName = findViewById(R.id.textView14);
+        TextView userName = findViewById(R.id.name);
+        recyclerView = findViewById(R.id.recycler_view);
 
         addTaskFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,12 +89,12 @@ public class Homepage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        setupRecyclerView();
 
-        setUptaskModels();
+      //  setUptaskModels();
 
-         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users");
@@ -94,14 +102,27 @@ public class Homepage extends AppCompatActivity {
 
         if (user != null) {
             String uid = user.getUid();
-            database.child(uid).get().addOnCompleteListener(task -> {
+            FirebaseFirestore.getInstance().collection("users")
+                    .document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                Registration.User user = task.getResult().toObject(Registration.User.class);
+                                if (user != null)
+                                    userName.setText(user.firstname);
+
+                            }
+                        }
+                    });
+          /*  database.child(uid).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().exists()) {
                         String email = task.getResult().child("email").getValue(String.class);
                         String Firstname = task.getResult().child("firstname").getValue(String.class);
-                        String Lastname = task.getResult().child("lastname").getValue(String.class);
 
-                        userName.setText(Firstname + Lastname);
+
+                        userName.setText(Firstname);
 
                         Toast.makeText(this, "User email: " + email, Toast.LENGTH_SHORT).show();
                     } else {
@@ -110,7 +131,7 @@ public class Homepage extends AppCompatActivity {
                 } else {
                     Toast.makeText(this, "Error: " + task.getException(), Toast.LENGTH_LONG).show();
                 }
-            });
+            });*/
         }
         GetTaskList();
 
@@ -119,16 +140,16 @@ public class Homepage extends AppCompatActivity {
     private void GetTaskList() {
 
 
-            Utility.getCollectionReferenceForTasks()
+        Utility.getCollectionReferenceForTasks()
 
-            .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    QuerySnapshot snap = task.getResult();
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot snap = task.getResult();
 
-                   taskModels = task.getResult().toObjects(taskModel.class);
-                        if(taskModels!=null){
+                        taskModels = task.getResult().toObjects(taskModel.class);
+                        if (taskModels != null) {
                             Log.e("Sucess", "List fetch sucessfully " + taskModels.size());
-                            recyclerView.setAdapter(new RVadapter(this, taskModels));
+                            recyclerView.setAdapter(new RVadapter( this ,taskModels ));
                             SetUpAlaram();
                         }
                         // Use retrievedTask
@@ -136,17 +157,17 @@ public class Homepage extends AppCompatActivity {
                         Log.e("Sucess", "document fetch failed");  // Document doesn't exist
                     }
 
-            });
-        }
+                });
+    }
 
     private void SetUpAlaram() {
-        for (taskModel model: taskModels
-             ) {
+        for (taskModel model : taskModels
+        ) {
 
 
             Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
             intent.putExtra("taskId", model.getTaskName());
-            intent.putExtra("TaskDesc",model.getTaskDescription());
+            intent.putExtra("TaskDesc", model.getTaskDescription());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(
                     this,
                     model.getTaskName().hashCode(), // unique id
@@ -157,7 +178,7 @@ public class Homepage extends AppCompatActivity {
             AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(
                     AlarmManager.RTC_WAKEUP,
-                    model.getDeadlineMillis() -( 60 * 60 * 1000), // Notify 60 minutes before deadline
+                    model.getDeadlineMillis() - (60 * 60 * 1000), // Notify 60 minutes before deadline
                     pendingIntent
             );
 
@@ -165,7 +186,7 @@ public class Homepage extends AppCompatActivity {
     }
 
 
-    private void setUptaskModels() {
+    void setupRecyclerView() {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2024, Calendar.MARCH, 31);
@@ -178,5 +199,7 @@ public class Homepage extends AppCompatActivity {
         super.onResume();
         GetTaskList();
     }
+
+
 }
 

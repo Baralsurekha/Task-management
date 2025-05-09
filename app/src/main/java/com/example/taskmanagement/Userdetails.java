@@ -5,18 +5,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class Userdetails extends AppCompatActivity {
+
+    private TextView tvUserName, tvFirstName, tvLastName, tvAddress, tvEmail;
+    private FirebaseUser currentUser;
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,57 +39,68 @@ public class Userdetails extends AppCompatActivity {
             return insets;
         });
 
-        // UI components
-        TextView tvUserName = findViewById(R.id.tvUserName);
-        TextView tvFirstName = findViewById(R.id.tvfirstname);
-        TextView tvLastName = findViewById(R.id.tvlastname);
-        TextView tvAddress = findViewById(R.id.tvaddress);
-        TextView tvEmail = findViewById(R.id.tvemail);
+        tvUserName = findViewById(R.id.tvUserName);
+        tvFirstName = findViewById(R.id.tvfirstname);
+        tvLastName = findViewById(R.id.tvlastname);
+        tvAddress = findViewById(R.id.tvaddress);
+        tvEmail = findViewById(R.id.tvemail);
 
-        // Getting user info from Firebase
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String email = currentUser.getEmail();
-            tvEmail.setText(email);
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        firestore = FirebaseFirestore.getInstance();
 
-            // Getting additional user details from Firestore
-            FirebaseFirestore.getInstance().collection("users")
-                    .document(currentUser.getUid())
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            // Set the user's full name, first name, last name, and address from Firestore
-                            tvUserName.setText(documentSnapshot.getString("firstName") + " " + documentSnapshot.getString("lastName"));
-                            tvFirstName.setText(documentSnapshot.getString("firstName"));
-                            tvLastName.setText(documentSnapshot.getString("lastName"));
-                            tvAddress.setText(documentSnapshot.getString("address"));
-                        }
-                    });
-        }
+        loadUserData();
 
-        // Edit Profile TextView click
-        TextView tvEditProfile = findViewById(R.id.tvEditProfile);
-        tvEditProfile.setOnClickListener(v -> {
-            // Passing user details to Edit profile activity using Intent extras
+        findViewById(R.id.tvEditProfile).setOnClickListener(v -> {
             if (currentUser != null) {
                 Intent intent = new Intent(Userdetails.this, Editprofile.class);
-
-                // Passing user info as Intent extras
                 intent.putExtra("firstName", tvFirstName.getText().toString());
                 intent.putExtra("lastName", tvLastName.getText().toString());
                 intent.putExtra("address", tvAddress.getText().toString());
                 intent.putExtra("email", currentUser.getEmail());
-
-                // Start Edit profile activity
                 startActivity(intent);
             }
         });
 
-        // Change Password Button click
-        Button btnChangePassword = findViewById(R.id.btnUpdateDetails);
-        btnChangePassword.setOnClickListener(v -> {
-            Intent intent = new Intent(Userdetails.this, changePassword.class);
-            startActivity(intent);
+        findViewById(R.id.logout).setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(Userdetails.this, MainActivity.class));
+            finish();
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserData();
+    }
+
+    private void loadUserData() {
+        if (currentUser != null) {
+            tvEmail.setText(currentUser.getEmail());
+
+            firestore.collection("users")
+                    .document(currentUser.getUid())
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot document = task.getResult();
+                                if (document.exists()) {
+                                    String firstName = document.getString("firstName");
+                                    String lastName = document.getString("lastName");
+                                    String address = document.getString("address");
+
+                                    tvUserName.setText(firstName + " " + lastName);
+                                    tvFirstName.setText(firstName);
+                                    tvLastName.setText(lastName);
+                                    tvAddress.setText(address);
+                                }
+                            } else {
+                                Toast.makeText(Userdetails.this, "Failed to load user data", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 }
