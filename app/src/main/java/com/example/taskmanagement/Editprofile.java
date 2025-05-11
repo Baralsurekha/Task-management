@@ -43,22 +43,18 @@ public class Editprofile extends AppCompatActivity {
         editAddress = findViewById(R.id.editAddress);
         Button btnSaveProfile = findViewById(R.id.btnSaveProfile);
 
-        // making email (non-editable)
         editEmail.setEnabled(false);
         editEmail.setFocusable(false);
 
-        // for  Firebase instances
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
 
-        // fields from Intent
         Intent intent = getIntent();
         editFirstName.setText(intent.getStringExtra("firstName"));
         editLastName.setText(intent.getStringExtra("lastName"));
         editAddress.setText(intent.getStringExtra("address"));
         editEmail.setText(intent.getStringExtra("email"));
 
-        // Save button
         btnSaveProfile.setOnClickListener(v -> {
             String firstName = editFirstName.getText().toString().trim();
             String lastName = editLastName.getText().toString().trim();
@@ -80,14 +76,11 @@ public class Editprofile extends AppCompatActivity {
                         .update(updates)
                         .addOnSuccessListener(unused -> {
                             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(this, Userdetails.class));
                             finish();
                         })
                         .addOnFailureListener(e ->
                                 Toast.makeText(this, "Failed to update profile", Toast.LENGTH_SHORT).show());
             }
         });
-
-
     }
 }
