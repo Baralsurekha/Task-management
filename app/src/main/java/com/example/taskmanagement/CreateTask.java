@@ -36,12 +36,15 @@ import java.util.Locale;
 public class CreateTask extends AppCompatActivity {
     String TaskStatus ;
     EditText taskName, taskDescription;
-    TextView deadlineDate, deadlineTime;
+    TextView deadlineDate, deadlineTime, pageTitleTV;
     Spinner taskStatus;
     Button addTaskBtn;
     Calendar calendar = Calendar.getInstance();
 
-    String docId;
+    String docId, TaskName, TaskDescription, DeadlineTime, DeadlineDate;
+
+    boolean isEditMode = false;
+    Button deleteTaskBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +56,35 @@ public class CreateTask extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        docId = getIntent().getStringExtra("docId");  // Retrieve docId from Intent
-        Log.e("docId", "Received docId: " + docId);  // Log the docId value
-
         taskName = findViewById(R.id.editTextname);
         taskDescription = findViewById(R.id.editTextdescription);
         taskStatus = findViewById(R.id.spinner);
         deadlineDate = findViewById(R.id.editTextDate);
         deadlineTime = findViewById(R.id.editTextTime);
         addTaskBtn = findViewById(R.id.addbutton);
+        pageTitleTV = findViewById(R.id.textView7);
+        deleteTaskBtn = findViewById(R.id.delete_button);
+
+        //receive data
+        docId = getIntent().getStringExtra("docId");  // Retrieve docId from Intent
+     // Log.e("docId", "Received docId: " + docId);  // Log the docId value
+        if(docId!=null && !docId.isEmpty()) {
+            isEditMode = true;
+        }
+
+        TaskName = getIntent().getStringExtra("TaskName");
+        TaskDescription = getIntent().getStringExtra("TaskDescription");
+        TaskStatus = getIntent().getStringExtra("TaskStatus");
+        DeadlineTime = getIntent().getStringExtra("DeadlineTime");
+        DeadlineDate = getIntent().getStringExtra("DeadlineDate");
+
+
+        taskName.setText(TaskName);
+        taskDescription.setText(TaskDescription);
+       // taskStatus.setText(TaskStatus);
+        deadlineDate.setText(DeadlineDate);
+        deadlineTime.setText(DeadlineTime);
+
         String[] options = {"TODO", "Progress", "Failed","Finished"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
 
@@ -104,10 +127,17 @@ public class CreateTask extends AppCompatActivity {
                 deadlineTime.setText(sdf.format(calendar.getTime()));
             }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
         });
+        if(isEditMode){
+            pageTitleTV.setText("Edit Task");
+            deleteTaskBtn.setVisibility(View.VISIBLE);
+            addTaskBtn.setVisibility(View.GONE);
+        }
 
-        addTaskBtn.setOnClickListener(v -> saveNote());
+        addTaskBtn.setOnClickListener(v -> saveTask());
+        deleteTaskBtn.setOnClickListener(v -> deleteTasktoFirebase());
+
     }
-    void saveNote(){
+    void saveTask(){
         String TaskName = taskName.getText().toString();
         String TaskDescription = taskDescription.getText().toString();
 
@@ -151,9 +181,9 @@ public class CreateTask extends AppCompatActivity {
         DocumentReference documentReference;
 
 
-        if (docId != null) {  // If docId exists, update the existing task
+        if (isEditMode) {  // If edit mode, update the existing task
             documentReference = Utility.getCollectionReferenceForTasks().document(docId);
-        } else {  // If no docId, create a new task
+        } else {  // If not edit mode, create a new task
             documentReference = Utility.getCollectionReferenceForTasks().document();
         }
 
@@ -205,6 +235,26 @@ boolean validateData (String TaskName,String TaskDescription,String TaskStatus,S
     }
     return true;
 }
+void deleteTasktoFirebase(){
+    DocumentReference documentReference;
+        documentReference = Utility.getCollectionReferenceForTasks().document();
 
+
+    documentReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+        @Override
+        public void onComplete(@NonNull Task<Void> tasks) {
+
+            if(tasks.isSuccessful()) {
+                Utility.showToast(CreateTask.this,"Task deleted successfully");
+                finish();
+
+            } else {
+
+                Utility.showToast(CreateTask.this,tasks.getException().getLocalizedMessage());
+            }
+        }
+    });
+
+}
 
 }
