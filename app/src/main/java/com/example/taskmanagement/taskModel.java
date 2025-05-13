@@ -6,6 +6,8 @@ public class taskModel {
     private String taskStatus;
     private long deadlineMillis;
 
+    private String documentId;
+
     public taskModel() {
 
     }
@@ -13,9 +15,7 @@ public class taskModel {
     public void setTaskName(String taskName) {
         this.taskName = taskName;
     }
-    public void setTaskDescription(String taskDescription) {
-        this.taskDescription = taskDescription;
-    }
+    public void setTaskDescription(String taskDescription) { this.taskDescription = taskDescription; }
     public void setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
     }
@@ -39,4 +39,8 @@ public class taskModel {
     public long getDeadlineMillis() {
         return deadlineMillis;
     }
+
+    public String getDocumentId() { return documentId; }       //  getter
+    public void setDocumentId(String documentId) { this.documentId = documentId; } // setter
 }
+

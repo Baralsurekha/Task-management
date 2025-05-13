@@ -41,6 +41,8 @@ public class CreateTask extends AppCompatActivity {
     Button addTaskBtn;
     Calendar calendar = Calendar.getInstance();
 
+    String docId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +53,9 @@ public class CreateTask extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        docId = getIntent().getStringExtra("docId");  // Retrieve docId from Intent
+        Log.e("docId", "Received docId: " + docId);  // Log the docId value
+
         taskName = findViewById(R.id.editTextname);
         taskDescription = findViewById(R.id.editTextdescription);
         taskStatus = findViewById(R.id.spinner);
@@ -144,7 +149,13 @@ public class CreateTask extends AppCompatActivity {
     }
     void saveTaskToFirebase(taskModel task) {
         DocumentReference documentReference;
-        documentReference = Utility.getCollectionReferenceForTasks().document();
+
+
+        if (docId != null) {  // If docId exists, update the existing task
+            documentReference = Utility.getCollectionReferenceForTasks().document(docId);
+        } else {  // If no docId, create a new task
+            documentReference = Utility.getCollectionReferenceForTasks().document();
+        }
 
         documentReference.set(task).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Registration.class);
                 startActivity(intent);
+
             }
         });
         loginbtn = findViewById(R.id.login);

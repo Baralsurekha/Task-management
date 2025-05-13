@@ -91,7 +91,6 @@ public class Homepage extends AppCompatActivity {
         });
         setupRecyclerView();
 
-      //  setUptaskModels();
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -146,17 +145,28 @@ public class Homepage extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         QuerySnapshot snap = task.getResult();
 
-                        taskModels = task.getResult().toObjects(taskModel.class);
-                        if (taskModels != null) {
-                            Log.e("Sucess", "List fetch sucessfully " + taskModels.size());
-                            recyclerView.setAdapter(new RVadapter( this ,taskModels ));
-                            SetUpAlaram();
-                        }
-                        // Use retrievedTask
-                    } else {
-                        Log.e("Sucess", "document fetch failed");  // Document doesn't exist
-                    }
+                        if (snap != null) {
+                             taskModels = snap.toObjects(taskModel.class);  // Convert to taskModel list
 
+                            for (int i = 0; i < taskModels.size(); i++) {
+                                taskModels.get(i).setDocumentId(snap.getDocuments().get(i).getId()); // Store document ID
+
+                            }
+
+                            Log.e("Success", "List fetched successfully: " + taskModels.size());
+                            RVadapter adapter = new RVadapter(this, taskModels);
+                            recyclerView.setAdapter(adapter); // Set the updated adapter
+                            adapter.notifyDataSetChanged();  // Notify adapter that data has changed
+
+                            if (!taskModels.isEmpty()) {
+                                SetUpAlaram();
+                            }
+                        }  else {
+                            Log.e("Failure", "No tasks found");
+                        }
+                    } else {
+                        Log.e("Failure", "Error fetching tasks: " + task.getException());
+                    }
                 });
     }
 
