@@ -72,18 +72,11 @@ public class CreateTask extends AppCompatActivity {
             isEditMode = true;
         }
 
-        TaskName = getIntent().getStringExtra("TaskName");
-        TaskDescription = getIntent().getStringExtra("TaskDescription");
-        TaskStatus = getIntent().getStringExtra("TaskStatus");
-        DeadlineTime = getIntent().getStringExtra("DeadlineTime");
-        DeadlineDate = getIntent().getStringExtra("DeadlineDate");
+        TaskName = getIntent().getStringExtra("taskName");
+        TaskDescription = getIntent().getStringExtra("taskDescription");
+        TaskStatus = getIntent().getStringExtra("taskStatus");
+        long deadlineMillis = getIntent().getLongExtra("DeadlineMillis", -1);
 
-
-        taskName.setText(TaskName);
-        taskDescription.setText(TaskDescription);
-       // taskStatus.setText(TaskStatus);
-        deadlineDate.setText(DeadlineDate);
-        deadlineTime.setText(DeadlineTime);
 
         String[] options = {"TODO", "Progress", "Failed","Finished"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
@@ -91,7 +84,26 @@ public class CreateTask extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         taskStatus.setAdapter(adapter);
 
-// Get selected item
+        taskName.setText(TaskName);
+        taskDescription.setText(TaskDescription);
+        taskStatus.setAdapter(adapter);
+
+        if (TaskStatus != null) {
+            int spinnerPosition = adapter.getPosition(TaskStatus);
+            taskStatus.setSelection(spinnerPosition);
+        }
+
+        if (deadlineMillis != -1) {
+            Date deadlineDateTime = new Date(deadlineMillis);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+            deadlineDate.setText(dateFormat.format(deadlineDateTime));
+            deadlineTime.setText(timeFormat.format(deadlineDateTime));
+            calendar.setTime(deadlineDateTime); // set calendar for editing
+        }
+
+       // Get selected item
         taskStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -130,7 +142,7 @@ public class CreateTask extends AppCompatActivity {
         if(isEditMode){
             pageTitleTV.setText("Edit Task");
             deleteTaskBtn.setVisibility(View.VISIBLE);
-            addTaskBtn.setVisibility(View.GONE);
+
         }
 
         addTaskBtn.setOnClickListener(v -> saveTask());
@@ -140,7 +152,6 @@ public class CreateTask extends AppCompatActivity {
     void saveTask(){
         String TaskName = taskName.getText().toString();
         String TaskDescription = taskDescription.getText().toString();
-
         String DeadlineDate =deadlineDate.getText().toString();
         String DeadlineTime = deadlineTime.getText().toString();
 
@@ -237,8 +248,7 @@ boolean validateData (String TaskName,String TaskDescription,String TaskStatus,S
 }
 void deleteTasktoFirebase(){
     DocumentReference documentReference;
-        documentReference = Utility.getCollectionReferenceForTasks().document();
-
+        documentReference = Utility.getCollectionReferenceForTasks().document(docId);
 
     documentReference.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
         @Override
