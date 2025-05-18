@@ -11,7 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class RVadapter extends RecyclerView.Adapter<RVadapter.TaskViewHolder> {
 
@@ -39,9 +42,10 @@ Context context;
         holder.textTaskName.setText(task.getTaskName());
         holder.textTaskDescription.setText(task.getTaskDescription());
         holder.textTaskStatus.setText("Status: " + task.getTaskStatus());
-
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault());
+        String formattedDeadline = sdf.format(new Date(task.getDeadlineMillis()));
         // Set calendar to show the deadline date
-        holder.calendarView.setDate(task.getDeadlineMillis(), true, true);
+        holder.calendarView.setText(formattedDeadline);
 
         // Disable interaction with calendar since this is frontend only
         holder.calendarView.setEnabled(false);
@@ -68,7 +72,7 @@ Context context;
 
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         TextView textTaskName, textTaskDescription, textTaskStatus;
-        CalendarView calendarView;
+        TextView calendarView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);

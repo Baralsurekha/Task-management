@@ -1,8 +1,11 @@
 package com.example.taskmanagement;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.util.Log;
@@ -33,9 +36,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.type.DateTime;
 
 import org.w3c.dom.Text;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -58,7 +63,19 @@ public class Homepage extends AppCompatActivity {
             return insets;
         });
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "taskChannel",                 // Channel ID
+                    "Task Reminders",              // Channel Name
+                    NotificationManager.IMPORTANCE_HIGH // Importance
+            );
+            channel.setDescription("Channel for task deadline reminders");
 
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
         FloatingActionButton addTaskFloatingButton = findViewById(R.id.floatingAction);
         ImageView userDetails = findViewById(R.id.homeUser);
         ImageView notifications = findViewById(R.id.homeNotification);
@@ -171,29 +188,45 @@ public class Homepage extends AppCompatActivity {
     }
 
     private void SetUpAlaram() {
-        for (taskModel model : taskModels
-        ) {
+        long currentTimeMillis = System.currentTimeMillis();
 
+        for (taskModel model : taskModels) {
+            long notificationTime = model.getDeadlineMillis() - (30 * 1000); // 30 seconds before deadline
 
-            Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
-            intent.putExtra("taskId", model.getTaskName());
-            intent.putExtra("TaskDesc", model.getTaskDescription());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    this,
-                    model.getTaskName().hashCode(), // unique id
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-            );
+            if (notificationTime > currentTimeMillis) {  // Only schedule if time is in the future
+                Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
+                intent.putExtra("taskId", model.getTaskName());
 
-            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setExact(
-                    AlarmManager.RTC_WAKEUP,
-                    model.getDeadlineMillis() - (60 * 60 * 1000), // Notify 60 minutes before deadline
-                    pendingIntent
-            );
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        this,
+                        model.getTaskName().hashCode(), // unique id
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
 
+                Log.e("Success:", "Time = " + model.getDeadlineMillis());
+                Log.d("Success:", "Time at notification = " + notificationTime);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            notificationTime,
+                            pendingIntent
+                    );
+                } else {
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            notificationTime,
+                            pendingIntent
+                    );
+                }
+            } else {
+                Log.w("Skipped:", "Notification time already passed for task: " + model.getTaskName());
+            }
         }
     }
+
 
 
     void setupRecyclerView() {

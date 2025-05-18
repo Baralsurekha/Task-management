@@ -17,11 +17,11 @@
         android:elevation="4dp"
         android:padding="16dp">
 
-        <CalendarView
+        <TextView
             android:id="@+id/calendarView"
             android:layout_width="0dp"
             android:layout_height="120dp"
-            android:layout_marginEnd="12dp"
+            android:longClickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
