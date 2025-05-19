@@ -105,7 +105,6 @@ public class Registration extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-
                         if(task.isSuccessful()){
 
             Utility.showToast(Registration.this,"Account created successfully. Please, verify your email.");
@@ -113,19 +112,7 @@ public class Registration extends AppCompatActivity {
                             firebaseAuth.getCurrentUser().sendEmailVerification();
 
                             User newUser = new User(Email,FirstName,LastName,"");
-                           /* database.child(firebaseAuth.getCurrentUser().getUid()).setValue(newUser, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                                    if(error == null){
-                                        changeInProgress(false);
-                                        firebaseAuth.signOut();
-                                        startActivity(new Intent(Registration.this, MainActivity.class));
-                                    }
-                                    else {
-                                        Log.e("Sucess","DBError... "+error);
-                                    }
-                                }
-                            });*/
+
                             FirebaseFirestore.getInstance().collection("users")
                                     .document(firebaseAuth.getCurrentUser().getUid()).set(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -143,9 +130,6 @@ public class Registration extends AppCompatActivity {
                                             }
                                         }
                                     });
-
-
-
 
                         } else {
                             Utility.showToast(Registration.this,task.getException().getLocalizedMessage());
@@ -199,7 +183,6 @@ public class Registration extends AppCompatActivity {
         }
 return true;
     }
-
 
     public static class User {
         public String email;

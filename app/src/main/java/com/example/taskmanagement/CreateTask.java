@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -39,10 +40,12 @@ public class CreateTask extends AppCompatActivity {
     TextView deadlineDate, deadlineTime, pageTitleTV;
     Spinner taskStatus;
     Button addTaskBtn;
+
+    CheckBox taskCompletedCheckbox;
     Calendar calendar = Calendar.getInstance();
 
     String docId, TaskName, TaskDescription, DeadlineTime, DeadlineDate;
-
+    boolean isCompleted = false;
     boolean isEditMode = false;
     Button deleteTaskBtn;
 
@@ -64,6 +67,7 @@ public class CreateTask extends AppCompatActivity {
         addTaskBtn = findViewById(R.id.addbutton);
         pageTitleTV = findViewById(R.id.textView7);
         deleteTaskBtn = findViewById(R.id.delete_button);
+        taskCompletedCheckbox = findViewById(R.id.taskCompletedCheckbox);
 
         //receive data
         docId = getIntent().getStringExtra("docId");  // Retrieve docId from Intent
@@ -77,10 +81,9 @@ public class CreateTask extends AppCompatActivity {
         TaskStatus = getIntent().getStringExtra("taskStatus");
         long deadlineMillis = getIntent().getLongExtra("DeadlineMillis", -1);
 
-
+//set up spinner
         String[] options = {"TODO", "Progress", "Failed","Finished"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         taskStatus.setAdapter(adapter);
 
@@ -167,7 +170,6 @@ public class CreateTask extends AppCompatActivity {
 
         long deadlineMillis;
         try {
-            // in format yyyy-mm-dd
             Date date = sdf.parse(dateTimeString);
             deadlineMillis = date.getTime();
             Log.e("Sucess ","Deadline time " +deadlineMillis );
@@ -192,9 +194,9 @@ public class CreateTask extends AppCompatActivity {
         DocumentReference documentReference;
 
 
-        if (isEditMode) {  // If edit mode, update the existing task
+        if (isEditMode) {
             documentReference = Utility.getCollectionReferenceForTasks().document(docId);
-        } else {  // If not edit mode, create a new task
+        } else {  
             documentReference = Utility.getCollectionReferenceForTasks().document();
         }
 

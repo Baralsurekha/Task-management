@@ -125,6 +125,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextDate" />
 
+    <CheckBox
+        android:id="@+id/taskCompletedCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Mark as Completed"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/editTextTime"
+        app:layout_constraintTop_toBottomOf="@id/editTextTime" />
+
     <Button
         android:id="@+id/addbutton"
         android:layout_width="200dp"

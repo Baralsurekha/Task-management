@@ -11,6 +11,7 @@ import android.os.Debug;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.AlarmManager;
@@ -43,13 +44,17 @@ import org.w3c.dom.Text;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Homepage extends AppCompatActivity {
-    FloatingActionButton addTaskbtn;
-    RecyclerView recyclerView;
 
+    RecyclerView recyclerView;
+    SearchView searchView;
+    ImageView historyButton;
     public List<taskModel> taskModels;
+    public List<taskModel> filteredTaskModels;
 
 
     @Override
@@ -81,6 +86,11 @@ public class Homepage extends AppCompatActivity {
         ImageView notifications = findViewById(R.id.homeNotification);
         TextView userName = findViewById(R.id.name);
         recyclerView = findViewById(R.id.recycler_view);
+        searchView = findViewById(R.id.searchView);
+        historyButton = findViewById(R.id.historyButton);
+
+        // Set up search functionality
+        setupSearchView();
 
         addTaskFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,12 +116,25 @@ public class Homepage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent intent = new Intent(Homepage.this, TaskHistory.class);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.e("Homepage", "Error starting TaskHistory: " + e.getMessage());
+                    Toast.makeText(Homepage.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         setupRecyclerView();
 
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -131,28 +154,47 @@ public class Homepage extends AppCompatActivity {
                             }
                         }
                     });
-          /*  database.child(uid).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().exists()) {
-                        String email = task.getResult().child("email").getValue(String.class);
-                        String Firstname = task.getResult().child("firstname").getValue(String.class);
 
-
-                        userName.setText(Firstname);
-
-                        Toast.makeText(this, "User email: " + email, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(this, "Error: " + task.getException(), Toast.LENGTH_LONG).show();
-                }
-            });*/
         }
         GetTaskList();
 
     }
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                filterTasks(query);
+                return true;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterTasks(newText);
+                return true;
+            }
+        });
+    }
+    private void filterTasks(String query) {
+        if (taskModels == null) return;
+
+        filteredTaskModels = new ArrayList<>();
+
+        if (query.isEmpty()) {
+            filteredTaskModels.addAll(taskModels);
+        } else {
+            String lowerCaseQuery = query.toLowerCase();
+            for (taskModel task : taskModels) {
+                if (task.getTaskName().toLowerCase().contains(lowerCaseQuery) ||
+                        task.getTaskDescription().toLowerCase().contains(lowerCaseQuery)) {
+                    filteredTaskModels.add(task);
+                }
+            }
+        }
+
+        // Update the adapter with filtered tasks
+        RVadapter adapter = new RVadapter(this, filteredTaskModels);
+        recyclerView.setAdapter(adapter);
+    }
     private void GetTaskList() {
 
 
@@ -169,6 +211,13 @@ public class Homepage extends AppCompatActivity {
                                 taskModels.get(i).setDocumentId(snap.getDocuments().get(i).getId()); // Store document ID
 
                             }
+                            // Sort tasks by deadline in ascending order
+                            Collections.sort(taskModels, new Comparator<taskModel>() {
+                                @Override
+                                public int compare(taskModel task1, taskModel task2) {
+                                    return Long.compare(task1.getDeadlineMillis(), task2.getDeadlineMillis());
+                                }
+                            });
 
                             Log.e("Success", "List fetched successfully: " + taskModels.size());
                             RVadapter adapter = new RVadapter(this, taskModels);
