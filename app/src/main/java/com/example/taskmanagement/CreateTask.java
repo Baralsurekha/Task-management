@@ -40,11 +40,9 @@ public class CreateTask extends AppCompatActivity {
     TextView deadlineDate, deadlineTime, pageTitleTV;
     Spinner taskStatus;
     Button addTaskBtn;
-
     CheckBox taskCompletedCheckbox;
     Calendar calendar = Calendar.getInstance();
-
-    String docId, TaskName, TaskDescription, DeadlineTime, DeadlineDate;
+    String docId, TaskName, TaskDescription;
     boolean isCompleted = false;
     boolean isEditMode = false;
     Button deleteTaskBtn;
@@ -71,15 +69,9 @@ public class CreateTask extends AppCompatActivity {
 
         //receive data
         docId = getIntent().getStringExtra("docId");  // Retrieve docId from Intent
-     // Log.e("docId", "Received docId: " + docId);  // Log the docId value
         if(docId!=null && !docId.isEmpty()) {
             isEditMode = true;
         }
-
-        TaskName = getIntent().getStringExtra("taskName");
-        TaskDescription = getIntent().getStringExtra("taskDescription");
-        TaskStatus = getIntent().getStringExtra("taskStatus");
-        long deadlineMillis = getIntent().getLongExtra("DeadlineMillis", -1);
 
 //set up spinner
         String[] options = {"TODO", "Progress", "Failed","Finished"};
@@ -87,34 +79,19 @@ public class CreateTask extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         taskStatus.setAdapter(adapter);
 
-        taskName.setText(TaskName);
-        taskDescription.setText(TaskDescription);
-        taskStatus.setAdapter(adapter);
 
-        if (TaskStatus != null) {
-            int spinnerPosition = adapter.getPosition(TaskStatus);
-            taskStatus.setSelection(spinnerPosition);
-        }
+        // ─── Load all incoming intent data (including existing date/time) ───
+        loadExistingTaskData(adapter);
 
-        if (deadlineMillis != -1) {
-            Date deadlineDateTime = new Date(deadlineMillis);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-            deadlineDate.setText(dateFormat.format(deadlineDateTime));
-            deadlineTime.setText(timeFormat.format(deadlineDateTime));
-            calendar.setTime(deadlineDateTime); // set calendar for editing
-        }
-
-       // Get selected item
+        // Auto‐check “Finished”
         taskStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = parent.getItemAtPosition(position).toString();
-                TaskStatus = selected;
-
+                TaskStatus = parent.getItemAtPosition(position).toString();
+                if ("Finished".equals(TaskStatus)) {
+                    taskCompletedCheckbox.setChecked(true);
+                }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Optional
@@ -132,16 +109,23 @@ public class CreateTask extends AppCompatActivity {
                 deadlineDate.setText(sdf.format(calendar.getTime()));
             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
         });
-        deadlineTime.setOnClickListener(v -> {
-            new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+        //time picker
+        deadlineTime.setOnClickListener(v ->
+            new TimePickerDialog(this, (tp, hourOfDay, minute) -> {
                 calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar.set(Calendar.MINUTE, minute);
                 calendar.set(Calendar.SECOND, 0);
 
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                deadlineTime.setText(sdf.format(calendar.getTime()));
-            }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
-        });
+                deadlineTime.setText(
+                        new SimpleDateFormat("HH:mm", Locale.getDefault())
+                                .format(calendar.getTime())
+                );
+            },
+                    calendar.get(Calendar.HOUR_OF_DAY),
+                    calendar.get(Calendar.MINUTE),
+                    true
+            ).show());
+
         if(isEditMode){
             pageTitleTV.setText("Edit Task");
             deleteTaskBtn.setVisibility(View.VISIBLE);
@@ -150,32 +134,61 @@ public class CreateTask extends AppCompatActivity {
 
         addTaskBtn.setOnClickListener(v -> saveTask());
         deleteTaskBtn.setOnClickListener(v -> deleteTasktoFirebase());
+    }
+    private void loadExistingTaskData(ArrayAdapter<String> adapter) {
+        if (!isEditMode) return;
 
+        // Basic fields
+        TaskName        = getIntent().getStringExtra("taskName");
+        TaskDescription = getIntent().getStringExtra("taskDescription");
+        TaskStatus      = getIntent().getStringExtra("taskStatus");
+        isCompleted     = getIntent().getBooleanExtra("isCompleted", false);
+
+        taskName.setText(TaskName);
+        taskDescription.setText(TaskDescription);
+        taskCompletedCheckbox.setChecked(isCompleted);
+
+        // Spinner selection
+        if (TaskStatus != null) {
+            int pos = adapter.getPosition(TaskStatus);
+            if (pos >= 0) taskStatus.setSelection(pos);
+        }
+
+        // **Use the same key your adapter used!**
+        long deadlineMillis = getIntent().getLongExtra("deadlineMillis", -1);
+        if (deadlineMillis != -1) {
+            Date existing = new Date(deadlineMillis);
+            calendar.setTime(existing);
+            deadlineDate.setText(
+                    new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                            .format(existing)
+            );
+            deadlineTime.setText(
+                    new SimpleDateFormat("HH:mm", Locale.getDefault())
+                            .format(existing)
+            );
+        }
     }
     void saveTask(){
-        String TaskName = taskName.getText().toString();
-        String TaskDescription = taskDescription.getText().toString();
-        String DeadlineDate =deadlineDate.getText().toString();
-        String DeadlineTime = deadlineTime.getText().toString();
+        String TaskName = taskName.getText().toString().trim();
+        String TaskDescription = taskDescription.getText().toString().trim();
+        String DeadlineDate =deadlineDate.getText().toString().trim();
+        String DeadlineTime = deadlineTime.getText().toString().trim();
+        boolean completed      = taskCompletedCheckbox.isChecked();
 
         boolean isValidated = validateData(TaskName, TaskDescription,TaskStatus, DeadlineDate, DeadlineTime);  //validation is true
-
         //if validation is false, it will return.
         if(!isValidated) {
             return;
         }
-        // Combine and parse date + time
-        String dateTimeString = DeadlineDate + " " + DeadlineTime;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
-        long deadlineMillis;
+        long millis;
         try {
-            Date date = sdf.parse(dateTimeString);
-            deadlineMillis = date.getTime();
-            Log.e("Sucess ","Deadline time " +deadlineMillis );
+            Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                    .parse(DeadlineDate + " " + DeadlineTime);
+            millis = dt.getTime();
         } catch (ParseException e) {
-            deadlineDate.setError("Invalid date or time format");
-            deadlineDate.requestFocus();
+            deadlineDate.setError("Invalid date/time");
             return;
         }
 
@@ -184,16 +197,15 @@ public class CreateTask extends AppCompatActivity {
         task.setTaskName(TaskName);
         task.setTaskDescription(TaskDescription);
         task.setTaskStatus(TaskStatus);
-        task.setDeadlineMillis(deadlineMillis);
+        task.setDeadlineMillis(millis);
+        task.setCompleted(completed);
 
-        //saving task to firebase
+
+        /** //saving task to firebase
         saveTaskToFirebase(task);
 
-    }
-    void saveTaskToFirebase(taskModel task) {
+    void    saveTaskToFirebase(taskModel task) {
         DocumentReference documentReference;
-
-
         if (isEditMode) {
             documentReference = Utility.getCollectionReferenceForTasks().document(docId);
         } else {  
@@ -205,7 +217,7 @@ public class CreateTask extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> tasks) {
 
                 if(tasks.isSuccessful()) {
-                    Utility.showToast(CreateTask.this,"Task added successfully");
+                    Utility.showToast(CreateTask.this,"Task updatedd successfully");
                     finish();
 
                 } else {
@@ -214,7 +226,32 @@ public class CreateTask extends AppCompatActivity {
                 }
             }
         });
-
+    } */
+    // If finished → history
+        if (completed && "Finished".equals(TaskStatus)) {
+        if (isEditMode) {
+            task.setDocumentId(docId);
+            Utility.moveTaskToHistory(task);
+            finish();
+        } else {
+            DocumentReference hr = Utility.getCollectionReferenceForTaskHistory().document();
+            hr.set(task).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override public void onComplete(Task<Void> t) {
+                    finish();
+                }
+            });
+        }
+    } else {
+        // Save/update
+        DocumentReference dr = isEditMode
+                ? Utility.getCollectionReferenceForTasks().document(docId)
+                : Utility.getCollectionReferenceForTasks().document();
+        dr.set(task).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override public void onComplete(Task<Void> t) {
+                finish();
+            }
+        });
+    }
     }
 
 boolean validateData (String TaskName,String TaskDescription,String TaskStatus,String DeadlineDate,String DeadlineTime) {
@@ -248,6 +285,7 @@ boolean validateData (String TaskName,String TaskDescription,String TaskStatus,S
     }
     return true;
 }
+/**
 void deleteTasktoFirebase(){
     DocumentReference documentReference;
         documentReference = Utility.getCollectionReferenceForTasks().document(docId);
@@ -267,6 +305,23 @@ void deleteTasktoFirebase(){
         }
     });
 
+} */
+void deleteTasktoFirebase() {
+    if (!isEditMode) return;
+    taskModel task = new taskModel();
+    task.setDocumentId(docId);
+    task.setTaskName(taskName.getText().toString());
+    task.setTaskDescription(taskDescription.getText().toString());
+    task.setTaskStatus("Deleted");
+    try {
+        Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                .parse(deadlineDate.getText() + " " + deadlineTime.getText());
+        task.setDeadlineMillis(dt.getTime());
+    } catch (Exception e) {
+        task.setDeadlineMillis(System.currentTimeMillis());
+    }
+    Utility.moveTaskToHistory(task);
+    finish();
 }
 
 }

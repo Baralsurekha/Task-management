@@ -21,7 +21,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 public class RVadapter extends RecyclerView.Adapter<RVadapter.TaskViewHolder> {
 
 Context context;

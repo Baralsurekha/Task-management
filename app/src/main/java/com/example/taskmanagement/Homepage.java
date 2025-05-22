@@ -292,6 +292,5 @@ public class Homepage extends AppCompatActivity {
         GetTaskList();
     }
 
-
 }
 

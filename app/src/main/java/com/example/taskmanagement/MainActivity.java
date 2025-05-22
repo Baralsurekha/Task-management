@@ -9,12 +9,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.content.Intent;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     EditText email,password;
     Button loginbtn;
     ProgressBar progressBar;
-
+    TextView forgetPassword;
     DatabaseReference database;
 
     @Override
@@ -57,9 +59,19 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.username);
         password = findViewById(R.id.password);
         progressBar= findViewById(R.id.progress_bar);
+        forgetPassword = findViewById(R.id.forgetpassword);
 
         loginbtn.setOnClickListener(v -> loginUser());
 
+        forgetPassword.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(MainActivity.this, ForgotPassword.class);
+                startActivity(intent);
+            } catch (Exception e) {
+                Log.e("MainActivity", "Error starting ForgotPassword: " + e.getMessage());
+                Toast.makeText(MainActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     void loginUser() {
         String Email = email.getText().toString();

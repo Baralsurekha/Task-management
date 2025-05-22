@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ public class Userdetails extends AppCompatActivity {
     private TextView tvUserName, tvFirstName, tvLastName, tvAddress, tvEmail;
     private FirebaseUser currentUser;
     private FirebaseFirestore firestore;
+    private Button btnChangePassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +46,11 @@ public class Userdetails extends AppCompatActivity {
         tvLastName = findViewById(R.id.tvlastname);
         tvAddress = findViewById(R.id.tvaddress);
         tvEmail = findViewById(R.id.tvemail);
+        ImageView backArrow = findViewById(R.id.backid);
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         firestore = FirebaseFirestore.getInstance();
+        btnChangePassword = findViewById(R.id.btnUpdateDetails);
 
         loadUserData();
 
@@ -59,6 +63,16 @@ public class Userdetails extends AppCompatActivity {
                 intent.putExtra("email", currentUser.getEmail());
                 startActivity(intent);
             }
+        });
+
+        backArrow.setOnClickListener(v -> {
+            Intent intent = new Intent(Userdetails.this, Homepage.class);
+            startActivity(intent);
+                });
+
+        btnChangePassword.setOnClickListener(v -> {
+            Intent intent = new Intent(Userdetails.this, changePassword.class);
+            startActivity(intent);
         });
 
         findViewById(R.id.logout).setOnClickListener(v -> {
