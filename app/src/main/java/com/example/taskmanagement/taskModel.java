@@ -5,6 +5,7 @@ public class taskModel {
     private String taskDescription;
     private String taskStatus;
     private long deadlineMillis;
+    private long notideadlineMillis;
     private boolean isCompleted;
     private String documentId;
 
@@ -23,6 +24,9 @@ public class taskModel {
     public void setDeadlineMillis(long deadlineMillis) {
         this.deadlineMillis = deadlineMillis;
     }
+    public void setnotideadlineMillis(long deadlineMillis) {
+        this.notideadlineMillis = deadlineMillis;
+    }
     public void setCompleted(boolean completed) { isCompleted = completed; }
     public void setDocumentId(String documentId) { this.documentId = documentId; } // setter
     public String getTaskName() {
@@ -39,6 +43,9 @@ public class taskModel {
 
     public long getDeadlineMillis() {
         return deadlineMillis;
+    }
+    public long getnotideadlineMillis() {
+        return notideadlineMillis;
     }
     public boolean isCompleted() { return isCompleted; }
     public String getDocumentId() { return documentId; }

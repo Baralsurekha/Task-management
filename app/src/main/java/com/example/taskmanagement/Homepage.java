@@ -240,8 +240,8 @@ public class Homepage extends AppCompatActivity {
         long currentTimeMillis = System.currentTimeMillis();
 
         for (taskModel model : taskModels) {
-            long notificationTime = model.getDeadlineMillis() - (30 * 1000); // 30 seconds before deadline
-
+            long notificationTime = model.getnotideadlineMillis(); // 30 seconds before deadline
+            Log.d("Success:", "Time at notification = " + notificationTime);
             if (notificationTime > currentTimeMillis) {  // Only schedule if time is in the future
                 Intent intent = new Intent(this, ReminderBroadcastReceiver.class);
                 intent.putExtra("taskId", model.getTaskName());
@@ -254,7 +254,7 @@ public class Homepage extends AppCompatActivity {
                 );
 
                 Log.e("Success:", "Time = " + model.getDeadlineMillis());
-                Log.d("Success:", "Time at notification = " + notificationTime);
+
 
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

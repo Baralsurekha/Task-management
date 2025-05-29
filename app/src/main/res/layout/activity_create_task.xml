@@ -125,16 +125,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextDate" />
 
+    <TextView
+        android:id="@+id/editTextTime2"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/background_task"
+        android:backgroundTint="#FBFAE7"
+        android:clickable="true"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:hint="Notification Time"
+        android:paddingLeft="10dp"
+        android:textColor="#090909"
+        android:textColorHint="#595757"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextTime" />
+
     <CheckBox
         android:id="@+id/taskCompletedCheckbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Mark as Completed"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@id/editTextTime"
-        app:layout_constraintTop_toBottomOf="@id/editTextTime" />
+        app:layout_constraintStart_toStartOf="@id/editTextTime2"
+        app:layout_constraintTop_toBottomOf="@id/editTextTime2" />
 
     <Button
         android:id="@+id/addbutton"
@@ -148,7 +170,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextTime" />
+        app:layout_constraintTop_toBottomOf="@id/editTextTime2" />
 
     <Button
         android:id="@+id/delete_button"
@@ -158,12 +180,12 @@
         android:backgroundTint="#AF4C68"
         android:text="Delete"
         android:textColor="@color/white"
-        android:visibility="gone"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
+        app:layout_constraintTop_toBottomOf="@id/editTextTime2" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

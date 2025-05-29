@@ -37,7 +37,7 @@ import java.util.Locale;
 public class CreateTask extends AppCompatActivity {
     String TaskStatus ;
     EditText taskName, taskDescription;
-    TextView deadlineDate, deadlineTime, pageTitleTV;
+    TextView deadlineDate, deadlineTime, pageTitleTV,notiTime;
     Spinner taskStatus;
     Button addTaskBtn;
     CheckBox taskCompletedCheckbox;
@@ -66,7 +66,7 @@ public class CreateTask extends AppCompatActivity {
         pageTitleTV = findViewById(R.id.textView7);
         deleteTaskBtn = findViewById(R.id.delete_button);
         taskCompletedCheckbox = findViewById(R.id.taskCompletedCheckbox);
-
+        notiTime = findViewById(R.id.editTextTime2);
         //receive data
         docId = getIntent().getStringExtra("docId");  // Retrieve docId from Intent
         if(docId!=null && !docId.isEmpty()) {
@@ -125,7 +125,21 @@ public class CreateTask extends AppCompatActivity {
                     calendar.get(Calendar.MINUTE),
                     true
             ).show());
+        notiTime.setOnClickListener(v ->
+                new TimePickerDialog(this, (tp, hourOfDay, minute) -> {
+                    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    calendar.set(Calendar.MINUTE, minute);
+                    calendar.set(Calendar.SECOND, 0);
 
+                    notiTime.setText(
+                            new SimpleDateFormat("HH:mm", Locale.getDefault())
+                                    .format(calendar.getTime())
+                    );
+                },
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        true
+                ).show());
         if(isEditMode){
             pageTitleTV.setText("Edit Task");
             deleteTaskBtn.setVisibility(View.VISIBLE);
@@ -156,6 +170,7 @@ public class CreateTask extends AppCompatActivity {
 
         // **Use the same key your adapter used!**
         long deadlineMillis = getIntent().getLongExtra("deadlineMillis", -1);
+        long notiMillis = getIntent().getLongExtra("notiMillis", -1);
         if (deadlineMillis != -1) {
             Date existing = new Date(deadlineMillis);
             calendar.setTime(existing);
@@ -167,6 +182,14 @@ public class CreateTask extends AppCompatActivity {
                     new SimpleDateFormat("HH:mm", Locale.getDefault())
                             .format(existing)
             );
+
+        }
+        if(notiMillis!=-1){
+            Date  existing = new Date(notiMillis);
+            notiTime.setText(
+                    new SimpleDateFormat("HH:mm", Locale.getDefault())
+                            .format(existing)
+            );
         }
     }
     void saveTask(){
@@ -174,6 +197,7 @@ public class CreateTask extends AppCompatActivity {
         String TaskDescription = taskDescription.getText().toString().trim();
         String DeadlineDate =deadlineDate.getText().toString().trim();
         String DeadlineTime = deadlineTime.getText().toString().trim();
+        String Notitime = notiTime.getText().toString().trim();
         boolean completed      = taskCompletedCheckbox.isChecked();
 
         boolean isValidated = validateData(TaskName, TaskDescription,TaskStatus, DeadlineDate, DeadlineTime);  //validation is true
@@ -183,21 +207,32 @@ public class CreateTask extends AppCompatActivity {
         }
 
         long millis;
+        long noti;
         try {
             Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
                     .parse(DeadlineDate + " " + DeadlineTime);
             millis = dt.getTime();
+
         } catch (ParseException e) {
             deadlineDate.setError("Invalid date/time");
             return;
         }
-
+try {
+ Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            .parse(DeadlineDate + " " + Notitime);
+    noti = dt.getTime();
+} catch (ParseException e){
+    deadlineDate.setError("Invalid date/time");
+    return;
+}
         // adding task using taskModel
         taskModel task = new taskModel();
         task.setTaskName(TaskName);
         task.setTaskDescription(TaskDescription);
         task.setTaskStatus(TaskStatus);
         task.setDeadlineMillis(millis);
+        Log.e("Sucess","notification deadline"+ noti);
+        task.setnotideadlineMillis(noti);
         task.setCompleted(completed);
 
 
@@ -317,6 +352,9 @@ void deleteTasktoFirebase() {
         Date dt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
                 .parse(deadlineDate.getText() + " " + deadlineTime.getText());
         task.setDeadlineMillis(dt.getTime());
+        dt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                .parse(deadlineDate.getText() + " " + notiTime.getText());
+        task.setnotideadlineMillis(dt.getTime());
     } catch (Exception e) {
         task.setDeadlineMillis(System.currentTimeMillis());
     }

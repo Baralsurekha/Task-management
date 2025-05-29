@@ -89,6 +89,7 @@ Context context;
             intent.putExtra("taskStatus", task.getTaskStatus());
             intent.putExtra("isCompleted", task.isCompleted());
             intent.putExtra("deadlineMillis", task.getDeadlineMillis());
+            intent.putExtra("notiMillis", task.getnotideadlineMillis());
             intent.putExtra("docId", task.getDocumentId());
             context.startActivity(intent);
         });
